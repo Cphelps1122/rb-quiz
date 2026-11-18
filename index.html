@@ -85,9 +85,7 @@ When you carry it: aim right up the center's backside (Scat: outside the tackle 
 <a class="go" id="sms" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Text Coach</a>
 <a class="go alt" id="mail" href="#" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;text-decoration:none">Email Coach</a>
 </div>
-<button class="go alt" id="copy" style="margin-top:10px">Copy my results</button>
-<p style="font-size:15px;color:#555;margin:6px 0 0">If Text Coach doesn't open your messages, tap Copy my results and paste it in a text to Coach at (214) 578-6616.</p>
-<pre id="rep" style="white-space:pre-wrap;font:inherit;font-size:16px;background:#f4f4f2;border-radius:10px;padding:8px;margin:8px 0 0"></pre>
+<p style="font-size:15px;color:#555;margin:6px 0 0">Sends your score, what you missed, and your question.</p>
 <button class="go" id="again" style="margin-top:14px">Retry the ones I missed</button>
 <button class="go alt" id="home" style="margin-top:10px">Start over</button>
 </section>
@@ -352,16 +350,11 @@ function report(){
 function setSend(){
   const body = encodeURIComponent(report());
   $('sms').href = 'sms:' + COACH_PHONE + '?&body=' + body;
-  $('rep').textContent = report();
   $('mail').href = 'mailto:' + COACH_EMAIL + '?subject=' + encodeURIComponent('RB Quiz: ' + ($('nm').value.trim() || 'player')) + '&body=' + body;
 }
 $('qbox').addEventListener('input', setSend);
 $('sms').addEventListener('click', e => { e.preventDefault(); const u = $('sms').href; try { window.top.location.href = u; } catch (x) { const w = window.open(u, '_blank'); if (!w) location.href = u; } });
-$('copy').onclick = async () => {
-  const t = report();
-  try { await navigator.clipboard.writeText(t); $('copy').textContent = 'Copied! Paste it in a text to Coach'; }
-  catch (x) { const r = document.createRange(); r.selectNodeContents($('rep')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('copy').textContent = 'Results selected: tap Copy'; }
-};
+
 $('next').onclick = () => { i++; i < deck.length ? show() : finish(); };
 $('begin').onclick = () => begin(PLAYS.filter(p => picked.has(p.g)));
 $('again').onclick = () => begin([...new Set(missed)]);
